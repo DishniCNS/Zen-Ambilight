@@ -109,6 +109,7 @@ async function sample(win, state) {
     const data = ctx.getImageData(0, 0, canvas.width, canvas.height);
     state.engine.sample(data.data, data.width, data.height);
     bitmap.close?.();
+    state.engine.tick(performance.now());
     applyCSS(win, state);
   } catch (error) {
     if (state.engine.settings.debug) console.warn(`[${NS}] snapshot failed`, error);

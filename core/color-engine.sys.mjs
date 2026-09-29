@@ -27,9 +27,9 @@ function rgbToHsl(r, g, b) {
 
 function hslToRgb(h, s, l) {
   if (s === 0) return [l * 255, l * 255, l * 255];
-  const hue = (n) => (n + h * 12) % 12;
+  const hue = n => (n + h * 12) % 12;
   const a = s * Math.min(l, 1 - l);
-  const f = (n) => l - a * Math.max(-1, Math.min(hue(n) - 3, Math.min(9 - hue(n), 1)));
+  const f = n => l - a * Math.max(-1, Math.min(hue(n) - 3, Math.min(9 - hue(n), 1)));
   return [f(0) * 255, f(8) * 255, f(4) * 255];
 }
 
@@ -59,24 +59,25 @@ function sampleZone(data, width, height, x0, y0, x1, y1) {
   const stepX = Math.max(1, Math.floor(sx / 12));
   const stepY = Math.max(1, Math.floor(sy / 8));
   const pixels = [];
-  let sumR = 0, sumG = 0, sumB = 0, count = 0;
+
   for (let y = startY; y < startY + sy && y < height; y += stepY) {
     for (let x = startX; x < startX + sx && x < width; x += stepX) {
       const i = (y * width + x) * 4;
       const r = data[i], g = data[i + 1], b = data[i + 2], a = data[i + 3] / 255;
       if (a < 0.05) continue;
-      const l = luminance(r, g, b);
-      pixels.push([r, g, b, l]);
-      sumR += r; sumG += g; sumB += b; count++;
+      pixels.push([r, g, b, luminance(r, g, b)]);
     }
   }
-  if (!count) return [0, 0, 0];
+
+  if (!pixels.length) return [0, 0, 0];
   pixels.sort((a, b) => a[3] - b[3]);
   const trim = Math.floor(pixels.length * 0.08);
   const selected = pixels.slice(trim, Math.max(trim + 1, pixels.length - trim));
   let r = 0, g = 0, b = 0;
-  for (const p of selected) { r += p[0]; g += p[1]; b += p[2]; }
-  const n = selected.length || count;
+  for (const p of selected) {
+    r += p[0]; g += p[1]; b += p[2];
+  }
+  const n = selected.length || 1;
   return [r / n, g / n, b / n];
 }
 
@@ -85,6 +86,7 @@ export class AmbilightEngine {
     this.settings = { ...AmbilightEngine.defaults, ...settings };
     this.target = Object.fromEntries(ZONE_NAMES.map(z => [z, [0, 0, 0]]));
     this.rendered = Object.fromEntries(ZONE_NAMES.map(z => [z, [0, 0, 0]]));
+    this.lastTick = 0;
   }
 
   setSettings(settings) {
@@ -101,7 +103,7 @@ export class AmbilightEngine {
       "right": [0.80, 0.22, 1, 0.78],
       "bottom-left": [0, 0.72, 0.34, 1],
       "bottom": [0.22, 0.78, 0.78, 1],
-      "bottom-right": [0.66, 0.72, 1, 1],
+      "bottom-right": [0.66, 0.72, 1, 0.28 + 0.72],
     };
     for (const zone of ZONE_NAMES) {
       this.target[zone] = adjustColor(sampleZone(imageData, width, height, ...boxes[zone]), this.settings);
@@ -109,8 +111,11 @@ export class AmbilightEngine {
     return this.target;
   }
 
-  tick(dtMs) {
-    const alphaBase = 1 - Math.exp(-Math.max(1, dtMs) / Math.max(1, this.settings.smoothness * 100));
+  tick(now = performance.now()) {
+    const previous = this.lastTick || now;
+    const dtMs = Math.max(1, now - previous);
+    this.lastTick = now;
+    const alphaBase = 1 - Math.exp(-dtMs / Math.max(1, this.settings.smoothness * 100));
     const alpha = clamp(alphaBase, 0.02, 1);
     for (const zone of ZONE_NAMES) {
       const from = this.rendered[zone];

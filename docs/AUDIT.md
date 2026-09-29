@@ -26,3 +26,10 @@
 The current implementation uses a low-rate parent-process `drawSnapshot()` of the active content viewport and crops the selected video rectangle when a video is available. This deliberately avoids cross-origin canvas reads. The snapshot is reduced to a small 192x108 analysis surface before pixel sampling.
 
 The page renderer is implemented but disabled by default.
+
+
+### 1.1.0 corrective audit
+
+The first package had two concrete implementation problems: browser-window actor registration was coupled to the per-window script lifecycle, and the renderer was painting a pseudo-element behind Zen's toolbox rather than the background layer Zen actually uses. The corrected package registers the Window Actor from the Sine background module and drives `#navigator-toolbox` through Zen's documented/current `--zen-navigator-toolbox-background` mechanism. The smoothing engine is also advanced after each captured frame.
+
+Current Zen source was checked against the public repository. Zen Release is currently based on Firefox 156.0.1, according to the repository README. The relevant current source defines `#navigator-toolbox` with `background: var(--zen-navigator-toolbox-background, transparent) !important`, and the vertical sidebar contains `#zen-tabs-wrapper` plus `#zen-sidebar-foot-buttons`.
