@@ -1,0 +1,352 @@
+[
+  {
+    "type": "text",
+    "label": "**Zen Ambilight**",
+    "size": "18px",
+    "margin": "20px 0 10px 0"
+  },
+  {
+    "type": "text",
+    "label": "Local ambient lighting based on rendered browser content. Changes are applied in real time.",
+    "margin": "0 0 15px 0"
+  },
+  {
+    "property": "zen-ambilight.enabled",
+    "label": "Enable",
+    "type": "checkbox",
+    "defaultValue": true
+  },
+  {
+    "type": "separator",
+    "label": "Appearance",
+    "margin": "20px 0 15px 0"
+  },
+  {
+    "property": "zen-ambilight.intensity",
+    "label": "Intensity",
+    "type": "dropdown",
+    "defaultValue": 0.58,
+    "options": [
+      {
+        "value": 0,
+        "label": "Off"
+      },
+      {
+        "value": 0.25,
+        "label": "25%"
+      },
+      {
+        "value": 0.4,
+        "label": "40%"
+      },
+      {
+        "value": 0.58,
+        "label": "58%"
+      },
+      {
+        "value": 0.75,
+        "label": "75%"
+      },
+      {
+        "value": 1,
+        "label": "100%"
+      }
+    ]
+  },
+  {
+    "property": "zen-ambilight.saturation",
+    "label": "Saturation",
+    "type": "dropdown",
+    "defaultValue": 1.08,
+    "options": [
+      {
+        "value": 0,
+        "label": "Monochrome"
+      },
+      {
+        "value": 0.75,
+        "label": "Low"
+      },
+      {
+        "value": 1,
+        "label": "Natural"
+      },
+      {
+        "value": 1.08,
+        "label": "Enhanced"
+      },
+      {
+        "value": 1.35,
+        "label": "High"
+      },
+      {
+        "value": 1.7,
+        "label": "Extreme"
+      }
+    ]
+  },
+  {
+    "property": "zen-ambilight.brightness",
+    "label": "Brightness",
+    "type": "dropdown",
+    "defaultValue": 1,
+    "options": [
+      {
+        "value": 0.5,
+        "label": "Dark"
+      },
+      {
+        "value": 0.75,
+        "label": "Dim"
+      },
+      {
+        "value": 1,
+        "label": "Natural"
+      },
+      {
+        "value": 1.25,
+        "label": "Bright"
+      },
+      {
+        "value": 1.5,
+        "label": "Very bright"
+      }
+    ]
+  },
+  {
+    "property": "zen-ambilight.blur",
+    "label": "Blur",
+    "type": "dropdown",
+    "defaultValue": 42,
+    "options": [
+      {
+        "value": 12,
+        "label": "12 px"
+      },
+      {
+        "value": 24,
+        "label": "24 px"
+      },
+      {
+        "value": 42,
+        "label": "42 px"
+      },
+      {
+        "value": 60,
+        "label": "60 px"
+      },
+      {
+        "value": 80,
+        "label": "80 px"
+      }
+    ]
+  },
+  {
+    "property": "zen-ambilight.smoothness",
+    "label": "Smoothness",
+    "type": "dropdown",
+    "defaultValue": 0.55,
+    "options": [
+      {
+        "value": 0.1,
+        "label": "Very fast"
+      },
+      {
+        "value": 0.3,
+        "label": "Fast"
+      },
+      {
+        "value": 0.55,
+        "label": "Balanced"
+      },
+      {
+        "value": 0.9,
+        "label": "Smooth"
+      },
+      {
+        "value": 1.5,
+        "label": "Very smooth"
+      }
+    ]
+  },
+  {
+    "property": "zen-ambilight.updateRate",
+    "label": "Update Rate",
+    "type": "dropdown",
+    "defaultValue": 10,
+    "options": [
+      {
+        "value": 4,
+        "label": "4 FPS"
+      },
+      {
+        "value": 6,
+        "label": "6 FPS"
+      },
+      {
+        "value": 8,
+        "label": "8 FPS"
+      },
+      {
+        "value": 10,
+        "label": "10 FPS"
+      },
+      {
+        "value": 12,
+        "label": "12 FPS"
+      },
+      {
+        "value": 15,
+        "label": "15 FPS"
+      },
+      {
+        "value": 20,
+        "label": "20 FPS"
+      }
+    ]
+  },
+  {
+    "property": "zen-ambilight.edgeSpread",
+    "label": "Edge Spread",
+    "type": "dropdown",
+    "defaultValue": 1,
+    "options": [
+      {
+        "value": 0.5,
+        "label": "Tight"
+      },
+      {
+        "value": 0.75,
+        "label": "Compact"
+      },
+      {
+        "value": 1,
+        "label": "Natural"
+      },
+      {
+        "value": 1.25,
+        "label": "Wide"
+      },
+      {
+        "value": 1.5,
+        "label": "Very wide"
+      },
+      {
+        "value": 2,
+        "label": "Maximum"
+      }
+    ]
+  },
+  {
+    "property": "zen-ambilight.minimumBrightness",
+    "label": "Minimum Brightness",
+    "type": "dropdown",
+    "defaultValue": 0.06,
+    "options": [
+      {
+        "value": 0,
+        "label": "0%"
+      },
+      {
+        "value": 0.03,
+        "label": "3%"
+      },
+      {
+        "value": 0.06,
+        "label": "6%"
+      },
+      {
+        "value": 0.1,
+        "label": "10%"
+      },
+      {
+        "value": 0.15,
+        "label": "15%"
+      }
+    ]
+  },
+  {
+    "property": "zen-ambilight.maximumBrightness",
+    "label": "Maximum Brightness",
+    "type": "dropdown",
+    "defaultValue": 0.94,
+    "options": [
+      {
+        "value": 0.7,
+        "label": "70%"
+      },
+      {
+        "value": 0.8,
+        "label": "80%"
+      },
+      {
+        "value": 0.94,
+        "label": "94%"
+      },
+      {
+        "value": 1,
+        "label": "100%"
+      }
+    ]
+  },
+  {
+    "type": "separator",
+    "label": "Targets",
+    "margin": "20px 0 15px 0"
+  },
+  {
+    "property": "zen-ambilight.pageAmbilight",
+    "label": "Page Ambilight",
+    "type": "checkbox",
+    "defaultValue": false,
+    "description": "Reserved for the page renderer; disabled by default."
+  },
+  {
+    "property": "zen-ambilight.sidebarAmbilight",
+    "label": "Sidebar Ambilight",
+    "type": "checkbox",
+    "defaultValue": true
+  },
+  {
+    "property": "zen-ambilight.tabAmbilight",
+    "label": "Tab Ambilight",
+    "type": "checkbox",
+    "defaultValue": true
+  },
+  {
+    "property": "zen-ambilight.newTab",
+    "label": "New Tab",
+    "type": "checkbox",
+    "defaultValue": false
+  },
+  {
+    "property": "zen-ambilight.privateWindow",
+    "label": "Private Window",
+    "type": "checkbox",
+    "defaultValue": false
+  },
+  {
+    "property": "zen-ambilight.fullscreen",
+    "label": "Fullscreen",
+    "type": "checkbox",
+    "defaultValue": true
+  },
+  {
+    "property": "zen-ambilight.onlyActiveTab",
+    "label": "Only Active Tab",
+    "type": "checkbox",
+    "defaultValue": true
+  },
+  {
+    "type": "separator",
+    "label": "Development",
+    "margin": "20px 0 15px 0"
+  },
+  {
+    "property": "zen-ambilight.debug",
+    "label": "Debug Mode",
+    "type": "checkbox",
+    "defaultValue": false,
+    "description": "Enables diagnostic logging and a subtle renderer outline."
+  }
+]
