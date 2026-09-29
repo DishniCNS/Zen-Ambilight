@@ -41,6 +41,7 @@ function stateFor(win) {
   return state;
 }
 
+
 function clearCSS(win) {
   const root = win?.document?.documentElement;
   if (!root) return;
@@ -50,23 +51,58 @@ function clearCSS(win) {
   root.removeAttribute("zen-ambilight-sidebar");
   root.removeAttribute("zen-ambilight-page");
   for (const zone of ZONE_NAMES) root.style.removeProperty(`--zen-ambilight-${zone}`);
+  root.style.removeProperty("--zen-ambilight-toolbar-gradient");
+  root.style.removeProperty("--zen-ambilight-page-gradient");
+  root.style.removeProperty("--zen-main-browser-background-toolbar");
+  root.style.removeProperty("--zen-main-browser-background");
   root.style.removeProperty("--zen-ambilight-blur");
   root.style.removeProperty("--zen-ambilight-edge-spread");
+  root.style.removeProperty("--zen-navigator-toolbox-background");
+}
+
+function gradientField(state) {
+  const f = state.engine.cssField();
+  return [
+    `radial-gradient(115% 42% at 100% 0%, ${f["top-right"]} 0%, transparent 72%)`,
+    `radial-gradient(135% 58% at 100% 50%, ${f.right} 0%, transparent 70%)`,
+    `radial-gradient(115% 42% at 100% 100%, ${f["bottom-right"]} 0%, transparent 72%)`,
+    `radial-gradient(105% 42% at 0% 0%, ${f["top-left"]} 0%, transparent 76%)`,
+    `radial-gradient(125% 58% at 0% 50%, ${f.left} 0%, transparent 74%)`,
+    `radial-gradient(105% 42% at 0% 100%, ${f["bottom-left"]} 0%, transparent 76%)`,
+    `linear-gradient(90deg, ${f.left}, transparent 38%, transparent 62%, ${f.right})`,
+  ].join(", ");
 }
 
 function applyCSS(win, state) {
   const root = win?.document?.documentElement;
   if (!root) return;
   root.setAttribute("zen-ambilight-active", "true");
-  if (state.engine.settings.sidebarAmbilight) root.setAttribute("zen-ambilight-sidebar", "true");
-  else root.removeAttribute("zen-ambilight-sidebar");
+  root.toggleAttribute("zen-ambilight-sidebar", !!state.engine.settings.sidebarAmbilight);
   root.toggleAttribute("zen-ambilight-tabs", !!state.engine.settings.tabAmbilight && !!state.engine.settings.sidebarAmbilight);
-  if (state.engine.settings.pageAmbilight) root.setAttribute("zen-ambilight-page", "true");
-  else root.removeAttribute("zen-ambilight-page");
-  if (state.engine.settings.debug) root.setAttribute("zen-ambilight-debug", "true");
-  else root.removeAttribute("zen-ambilight-debug");
+  root.toggleAttribute("zen-ambilight-page", !!state.engine.settings.pageAmbilight);
+  root.toggleAttribute("zen-ambilight-debug", !!state.engine.settings.debug);
+
   const field = state.engine.cssField();
   for (const zone of ZONE_NAMES) root.style.setProperty(`--zen-ambilight-${zone}`, field[zone]);
+
+  const toolbarGradient = gradientField(state);
+  root.style.setProperty("--zen-ambilight-toolbar-gradient", toolbarGradient);
+  root.style.setProperty("--zen-main-browser-background-toolbar", toolbarGradient);
+  // Zen itself paints #navigator-toolbox from this variable. Feeding the native
+  // variable keeps Ambilight inside Zen's chrome rendering path instead of adding
+  // a competing overlay element.
+  if (state.engine.settings.sidebarAmbilight) {
+    root.style.setProperty("--zen-navigator-toolbox-background", toolbarGradient);
+  } else {
+    root.style.removeProperty("--zen-navigator-toolbox-background");
+  }
+  if (state.engine.settings.pageAmbilight) {
+    root.style.setProperty("--zen-ambilight-page-gradient", toolbarGradient);
+    root.style.setProperty("--zen-main-browser-background", toolbarGradient);
+  } else {
+    root.style.removeProperty("--zen-ambilight-page-gradient");
+    root.style.removeProperty("--zen-main-browser-background");
+  }
   root.style.setProperty("--zen-ambilight-blur", `${state.engine.settings.blur}px`);
   root.style.setProperty("--zen-ambilight-edge-spread", String(state.engine.settings.edgeSpread));
 }

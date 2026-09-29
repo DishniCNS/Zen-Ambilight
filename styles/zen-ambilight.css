@@ -1,3 +1,12 @@
+/* Zen Ambilight integrates with Zen's native chrome background pipeline.
+ * No overlay layer is injected into #navigator-toolbox.
+ */
+
+#navigator-toolbox {
+  /* Zen's own rule consumes this variable with !important. */
+  --zen-navigator-toolbox-background: var(--zen-ambilight-toolbar-gradient, transparent) !important;
+}
+
 :root[zen-ambilight-active="true"] {
   --zen-ambilight-top-left: rgb(0 0 0 / 0);
   --zen-ambilight-top: rgb(0 0 0 / 0);
@@ -9,42 +18,23 @@
   --zen-ambilight-bottom-right: rgb(0 0 0 / 0);
 }
 
-/*
- * Zen's actual vertical tab/sidebar surface is #navigator-toolbox.
- * Zen itself defines its background through --zen-navigator-toolbox-background,
- * so overriding that variable is much more reliable than painting a ::before
- * behind the toolbox (which can end up below Zen's own opaque background).
- */
-:root[zen-ambilight-active="true"][zen-ambilight-sidebar="true"] #navigator-toolbox {
-  --zen-navigator-toolbox-background:
-    radial-gradient(90% 34% at 100% 0%, var(--zen-ambilight-top-right), transparent 78%),
-    radial-gradient(90% 42% at 100% 50%, var(--zen-ambilight-right), transparent 78%),
-    radial-gradient(90% 34% at 100% 100%, var(--zen-ambilight-bottom-right), transparent 78%),
-    radial-gradient(70% 38% at 0% 0%, var(--zen-ambilight-top-left), transparent 82%),
-    radial-gradient(60% 50% at 0% 50%, var(--zen-ambilight-left), transparent 84%),
-    radial-gradient(70% 38% at 0% 100%, var(--zen-ambilight-bottom-left), transparent 82%),
-    var(--zen-themed-toolbar-bg-transparent, transparent) !important;
-  background: var(--zen-navigator-toolbox-background) !important;
-  background-repeat: no-repeat !important;
-  background-size: 100% 100% !important;
-}
-
-/* The titlebar/background element is an actual Zen layer, so give it the same
- * ambient field when it exists. This covers expanded and single-toolbar layouts. */
+/* Feed Zen's own generic background renderer. ZenGradientGenerator normally
+ * writes these variables inline on the background elements; !important keeps
+ * the live Ambilight stream in that same renderer without creating another
+ * stacking layer. */
 :root[zen-ambilight-active="true"][zen-ambilight-sidebar="true"] #zen-toolbar-background {
-  --zen-main-browser-background-toolbar:
-    radial-gradient(100% 55% at 100% 0%, var(--zen-ambilight-top-right), transparent 78%),
-    radial-gradient(100% 75% at 100% 100%, var(--zen-ambilight-bottom-right), transparent 82%),
-    radial-gradient(80% 80% at 0% 50%, var(--zen-ambilight-left), transparent 88%),
-    var(--zen-themed-toolbar-bg-transparent, transparent) !important;
-  background: transparent !important;
+  --zen-main-browser-background-toolbar: var(--zen-ambilight-toolbar-gradient) !important;
 }
 
-/* Tabs themselves remain readable; only the selected tab receives a local edge glow. */
+:root[zen-ambilight-active="true"][zen-ambilight-page="true"] #zen-browser-background {
+  --zen-main-browser-background: var(--zen-ambilight-page-gradient) !important;
+}
+
+/* The selected tab receives only a local accent. The surrounding sidebar is
+ * painted by Zen's native #navigator-toolbox background above. */
 :root[zen-ambilight-active="true"][zen-ambilight-tabs="true"] #tabbrowser-tabs .tabbrowser-tab[visuallyselected="true"] .tab-background {
-  box-shadow:
-    inset 0 0 24px color-mix(in srgb, var(--zen-ambilight-right) 42%, transparent),
-    inset 0 0 24px color-mix(in srgb, var(--zen-ambilight-left) 28%, transparent) !important;
+  box-shadow: inset 0 0 24px color-mix(in srgb, var(--zen-ambilight-right) 48%, transparent),
+              inset 0 0 24px color-mix(in srgb, var(--zen-ambilight-left) 24%, transparent) !important;
 }
 
 :root[zen-ambilight-active="true"][zen-ambilight-tabs="true"] #tabbrowser-tabs .tabbrowser-tab[visuallyselected="true"] .tab-background::after {
@@ -53,50 +43,9 @@
   inset: 0;
   pointer-events: none;
   border-radius: inherit;
-  background:
-    radial-gradient(120% 150% at 100% 50%, var(--zen-ambilight-right), transparent 76%),
-    radial-gradient(120% 150% at 0% 50%, var(--zen-ambilight-left), transparent 76%);
+  background: radial-gradient(120% 150% at 100% 50%, var(--zen-ambilight-right), transparent 76%),
+              radial-gradient(120% 150% at 0% 50%, var(--zen-ambilight-left), transparent 76%);
   filter: blur(12px) saturate(1.15);
   opacity: 0.42;
-  transform: translateZ(0);
 }
 
-/* Right-sidebar orientation: the strongest source zones should be on the outside edge. */
-:root[zen-ambilight-active="true"][zen-ambilight-sidebar="true"][zen-right-side="true"] #navigator-toolbox {
-  --zen-navigator-toolbox-background:
-    radial-gradient(90% 34% at 0% 0%, var(--zen-ambilight-top-left), transparent 78%),
-    radial-gradient(90% 42% at 0% 50%, var(--zen-ambilight-left), transparent 78%),
-    radial-gradient(90% 34% at 0% 100%, var(--zen-ambilight-bottom-left), transparent 78%),
-    radial-gradient(70% 38% at 100% 0%, var(--zen-ambilight-top-right), transparent 82%),
-    radial-gradient(60% 50% at 100% 50%, var(--zen-ambilight-right), transparent 84%),
-    radial-gradient(70% 38% at 100% 100%, var(--zen-ambilight-bottom-right), transparent 82%),
-    var(--zen-themed-toolbar-bg-transparent, transparent) !important;
-  background: var(--zen-navigator-toolbox-background) !important;
-}
-
-:root[zen-ambilight-active="true"][zen-ambilight-debug="true"] #navigator-toolbox {
-  outline: 1px solid color-mix(in srgb, var(--zen-ambilight-right) 55%, transparent);
-}
-
-@media (prefers-reduced-motion: reduce) {
-  :root[zen-ambilight-active="true"][zen-ambilight-tabs="true"] #tabbrowser-tabs .tabbrowser-tab[visuallyselected="true"] .tab-background::after {
-    filter: none;
-  }
-}
-
-:root[zen-ambilight-page="true"] #appcontent::before {
-  content: "";
-  position: absolute;
-  inset: calc(-1 * var(--zen-ambilight-blur, 42px) * var(--zen-ambilight-edge-spread, 1));
-  pointer-events: none;
-  z-index: 0;
-  opacity: 0.28;
-  filter: blur(calc(var(--zen-ambilight-blur, 42px) * 0.8));
-  background:
-    radial-gradient(50% 25% at 0% 0%, var(--zen-ambilight-top-left), transparent 80%),
-    radial-gradient(50% 25% at 100% 0%, var(--zen-ambilight-top-right), transparent 80%),
-    radial-gradient(25% 60% at 0% 50%, var(--zen-ambilight-left), transparent 80%),
-    radial-gradient(25% 60% at 100% 50%, var(--zen-ambilight-right), transparent 80%),
-    radial-gradient(50% 25% at 0% 100%, var(--zen-ambilight-bottom-left), transparent 80%),
-    radial-gradient(50% 25% at 100% 100%, var(--zen-ambilight-bottom-right), transparent 80%);
-}

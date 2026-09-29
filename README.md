@@ -50,7 +50,7 @@ The engine samples rendered pixels rather than reading cross-origin video pixels
 
 - Window Actor registration now happens from the Sine background module, before content actors are needed.
 - Browser-window lifecycle no longer depends on a per-window actor registration race.
-- The sidebar renderer targets Zen's real `#navigator-toolbox` background variable instead of painting a pseudo-element behind an opaque toolbox.
+- The sidebar renderer feeds Zen's native chrome background pipeline: `#zen-toolbar-background` consumes `--zen-main-browser-background-toolbar`, while `#navigator-toolbox` consumes `--zen-navigator-toolbox-background`. No ambient-light overlay layer is injected into the toolbox.
 - Zen's native `#zen-toolbar-background` is also integrated.
 - Temporal smoothing is now actually advanced on every rendered frame.
 - Progress listeners are removed cleanly when the browser window unloads.
